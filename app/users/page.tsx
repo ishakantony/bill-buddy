@@ -1,6 +1,5 @@
 'use client'
 
-import { UserForm } from '../components/UserForm'
 import { UserList } from '../components/UserList'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter } from 'next/navigation'
@@ -27,7 +26,6 @@ export default function UsersPage() {
         </TabsList>
 
         <TabsContent value="users" className="space-y-4 mt-4">
-          <UserForm />
           <UserList />
         </TabsContent>
       </Tabs>

@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card } from '@/components/ui/card'
 import { storage } from '@/lib/storage'
 import { User } from '@/types'
 
@@ -14,11 +13,15 @@ const generateId = () => {
   return Math.random().toString(36).substring(2) + Date.now().toString(36)
 }
 
-export function UserForm() {
+interface UserFormProps {
+  onSuccess?: () => void
+}
+
+export function UserForm({ onSuccess }: UserFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!name || !email) return
@@ -32,34 +35,37 @@ export function UserForm() {
     storage.addUser(newUser)
     setName('')
     setEmail('')
+    onSuccess?.()
   }
 
   return (
-    <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-        <Button type="submit">Add User</Button>
-      </form>
-    </Card>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          value={name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
+          placeholder="Enter your name"
+          required
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setEmail(e.target.value)
+          }
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      <Button type="submit">Add User</Button>
+    </form>
   )
 }
