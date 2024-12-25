@@ -5,6 +5,17 @@ const STORAGE_KEYS = {
   GROUPS: 'bill-buddy-groups',
 } as const
 
+// Custom event for storage changes
+const dispatchStorageEvent = (key: string) => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('localStorageChange', {
+        detail: { key },
+      })
+    )
+  }
+}
+
 export const storage = {
   getUsers: (): User[] => {
     if (typeof window === 'undefined') return []
@@ -32,6 +43,7 @@ export const storage = {
     const users = storage.getUsers()
     users.push(user)
     storage.setUsers(users)
+    dispatchStorageEvent(STORAGE_KEYS.USERS)
   },
 
   addGroup: (group: Group) => {

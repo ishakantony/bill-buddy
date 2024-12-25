@@ -10,15 +10,22 @@ export function UserList() {
     // Load initial users
     setUsers(storage.getUsers())
 
-    // Setup storage event listener to update users when changed in another component
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'bill-buddy-users') {
+    // Setup storage event listener to update users when changed
+    const handleStorageChange = (e: CustomEvent<{ key: string }>) => {
+      if (e.detail.key === 'bill-buddy-users') {
         setUsers(storage.getUsers())
       }
     }
 
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    window.addEventListener(
+      'localStorageChange',
+      handleStorageChange as EventListener
+    )
+    return () =>
+      window.removeEventListener(
+        'localStorageChange',
+        handleStorageChange as EventListener
+      )
   }, [])
 
   if (users.length === 0) {
