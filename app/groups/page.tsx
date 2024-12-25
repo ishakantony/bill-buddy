@@ -1,6 +1,5 @@
 'use client'
 
-import { GroupForm } from '../components/GroupForm'
 import { GroupList } from '../components/GroupList'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter } from 'next/navigation'
@@ -27,7 +26,6 @@ export default function GroupsPage() {
         </TabsList>
 
         <TabsContent value="groups" className="space-y-4 mt-4">
-          <GroupForm />
           <GroupList />
         </TabsContent>
       </Tabs>

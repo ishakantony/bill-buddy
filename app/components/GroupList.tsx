@@ -6,9 +6,18 @@ import { Button } from '@/components/ui/button'
 import { storage } from '@/lib/storage'
 import { Group } from '@/types'
 import Link from 'next/link'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { GroupForm } from './GroupForm'
 
 export function GroupList() {
   const [groups, setGroups] = useState<Group[]>([])
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     // Load initial groups
@@ -35,6 +44,20 @@ export function GroupList() {
   if (groups.length === 0) {
     return (
       <Card className="p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Groups</h2>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>Add Group</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Group</DialogTitle>
+              </DialogHeader>
+              <GroupForm onSuccess={() => setOpen(false)} />
+            </DialogContent>
+          </Dialog>
+        </div>
         <p className="text-center text-gray-500">No groups created yet</p>
       </Card>
     )
@@ -42,7 +65,20 @@ export function GroupList() {
 
   return (
     <Card className="p-6">
-      <h2 className="text-xl font-bold mb-4">Groups</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Groups</h2>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button>Add Group</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Group</DialogTitle>
+            </DialogHeader>
+            <GroupForm onSuccess={() => setOpen(false)} />
+          </DialogContent>
+        </Dialog>
+      </div>
       <div className="space-y-4">
         {groups.map((group) => (
           <Card key={group.id} className="p-4 border">
