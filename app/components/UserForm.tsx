@@ -6,6 +6,14 @@ import { Card } from '@/components/ui/card'
 import { storage } from '@/lib/storage'
 import { User } from '@/types'
 
+// Helper function for generating IDs that works in both browser and test environments
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+  return Math.random().toString(36).substring(2) + Date.now().toString(36)
+}
+
 export function UserForm() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -16,7 +24,7 @@ export function UserForm() {
     if (!name || !email) return
 
     const newUser: User = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       name,
       email,
     }

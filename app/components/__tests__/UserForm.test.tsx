@@ -1,19 +1,31 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { UserForm } from '../UserForm'
-import { storage } from '@/lib/storage'
+import { storage } from '../../../lib/storage'
 
 // Mock the storage module
-jest.mock('@/lib/storage', () => ({
+jest.mock('../../../lib/storage', () => ({
   storage: {
     addUser: jest.fn(),
     getUsers: jest.fn(),
   },
 }))
 
+// Mock Math.random and Date.now for consistent ID generation in tests
+const mockRandom = jest
+  .spyOn(Math, 'random')
+  .mockImplementation(() => 0.123456789)
+const mockDate = jest.spyOn(Date, 'now').mockImplementation(() => 1234567890)
+
 describe('UserForm', () => {
   beforeEach(() => {
     // Clear mock calls before each test
     jest.clearAllMocks()
+  })
+
+  afterAll(() => {
+    // Restore original implementations
+    mockRandom.mockRestore()
+    mockDate.mockRestore()
   })
 
   it('renders form fields correctly', () => {
