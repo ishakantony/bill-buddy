@@ -17,6 +17,12 @@ const dispatchStorageEvent = (key: string) => {
 }
 
 export const storage = {
+  getGroup: (id: string): Group | undefined => {
+    if (typeof window === 'undefined') return undefined
+    const groups = storage.getGroups()
+    return groups.find((g) => g.id === id)
+  },
+
   getUsers: (): User[] => {
     if (typeof window === 'undefined') return []
     const users = localStorage.getItem(STORAGE_KEYS.USERS)
