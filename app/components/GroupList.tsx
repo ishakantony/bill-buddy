@@ -14,10 +14,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { GroupForm } from './GroupForm'
+import { ExpenseForm } from './ExpenseForm'
 
 export function GroupList() {
   const [groups, setGroups] = useState<Group[]>([])
   const [open, setOpen] = useState(false)
+  const [expenseDialogOpen, setExpenseDialogOpen] = useState<string | null>(
+    null
+  )
 
   useEffect(() => {
     // Load initial groups
@@ -40,6 +44,12 @@ export function GroupList() {
         handleStorageChange as EventListener
       )
   }, [])
+
+  const handleExpenseAdded = () => {
+    const updatedGroups = storage.getGroups()
+    setGroups(updatedGroups)
+    setExpenseDialogOpen(null)
+  }
 
   if (groups.length === 0) {
     return (
@@ -82,18 +92,44 @@ export function GroupList() {
       <div className="space-y-4">
         {groups.map((group) => (
           <Card key={group.id} className="p-4 border">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="text-lg font-semibold">{group.name}</h3>
-                <p className="text-sm text-gray-500">
-                  {group.members.length} members
-                </p>
+            <div className="flex flex-col space-y-2">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-semibold">{group.name}</h3>
+                  <p className="text-sm text-gray-500">
+                    {group.members.length} members
+                  </p>
+                </div>
+                <div className="flex flex-col space-y-2">
+                  <Link href={`/groups/${group.id}`}>
+                    <Button variant="outline" size="sm" className="w-full">
+                      View Details
+                    </Button>
+                  </Link>
+                  <Dialog
+                    open={expenseDialogOpen === group.id}
+                    onOpenChange={(open) =>
+                      setExpenseDialogOpen(open ? group.id : null)
+                    }
+                  >
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="w-full">
+                        Add Expense
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add New Expense</DialogTitle>
+                      </DialogHeader>
+                      <ExpenseForm
+                        group={group}
+                        onExpenseAdded={handleExpenseAdded}
+                        onSuccess={() => setExpenseDialogOpen(null)}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                </div>
               </div>
-              <Link href={`/groups/${group.id}`}>
-                <Button variant="outline" size="sm">
-                  View Details
-                </Button>
-              </Link>
             </div>
           </Card>
         ))}

@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -19,9 +18,14 @@ import { AlertMessage } from './AlertMessage'
 interface ExpenseFormProps {
   group: Group
   onExpenseAdded: () => void
+  onSuccess?: () => void
 }
 
-export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
+export function ExpenseForm({
+  group,
+  onExpenseAdded,
+  onSuccess,
+}: ExpenseFormProps) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [paidBy, setPaidBy] = useState('')
@@ -125,6 +129,7 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
     setCustomAmounts({})
     setPercentages({})
     setError(null)
+    onSuccess?.()
   }
 
   const handleMemberSelect = (userId: string) => {
@@ -137,139 +142,137 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
   }
 
   return (
-    <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Input
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter expense description"
-            required
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Input
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter expense description"
+          required
+        />
+      </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="amount">Amount</Label>
-          <Input
-            id="amount"
-            type="number"
-            step="0.01"
-            min="0"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
-            required
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="amount">Amount</Label>
+        <Input
+          id="amount"
+          type="number"
+          step="0.01"
+          min="0"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          required
+        />
+      </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="paidBy">Paid By</Label>
-          <Select value={paidBy} onValueChange={setPaidBy}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select who paid" />
-            </SelectTrigger>
-            <SelectContent>
-              {group.members.map((member) => (
-                <SelectItem key={member.id} value={member.id}>
-                  {member.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Split Type</Label>
-          <Select
-            value={splitType}
-            onValueChange={(value: 'equal' | 'custom' | 'percentage') =>
-              setSplitType(value)
-            }
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="equal">Equal Split</SelectItem>
-              <SelectItem value="custom">Custom Amounts</SelectItem>
-              <SelectItem value="percentage">Percentage Split</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Split Between</Label>
-          <div className="space-y-2">
+      <div className="space-y-2">
+        <Label htmlFor="paidBy">Paid By</Label>
+        <Select value={paidBy} onValueChange={setPaidBy}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select who paid" />
+          </SelectTrigger>
+          <SelectContent>
             {group.members.map((member) => (
-              <div key={member.id} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id={`member-${member.id}`}
-                  checked={selectedMembers.includes(member.id)}
-                  onChange={() => handleMemberSelect(member.id)}
-                  className="rounded border-gray-300 text-primary focus:ring-primary"
-                />
-                <label htmlFor={`member-${member.id}`} className="text-sm">
-                  {member.name}
-                </label>
+              <SelectItem key={member.id} value={member.id}>
+                {member.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-                {splitType === 'custom' &&
-                  selectedMembers.includes(member.id) && (
+      <div className="space-y-2">
+        <Label>Split Type</Label>
+        <Select
+          value={splitType}
+          onValueChange={(value: 'equal' | 'custom' | 'percentage') =>
+            setSplitType(value)
+          }
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="equal">Equal Split</SelectItem>
+            <SelectItem value="custom">Custom Amounts</SelectItem>
+            <SelectItem value="percentage">Percentage Split</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Split Between</Label>
+        <div className="space-y-2">
+          {group.members.map((member) => (
+            <div key={member.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={`member-${member.id}`}
+                checked={selectedMembers.includes(member.id)}
+                onChange={() => handleMemberSelect(member.id)}
+                className="rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <label htmlFor={`member-${member.id}`} className="text-sm">
+                {member.name}
+              </label>
+
+              {splitType === 'custom' &&
+                selectedMembers.includes(member.id) && (
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={customAmounts[member.id] || ''}
+                    onChange={(e) =>
+                      setCustomAmounts((prev) => ({
+                        ...prev,
+                        [member.id]: e.target.value,
+                      }))
+                    }
+                    placeholder="Amount"
+                    className="w-24 ml-2"
+                  />
+                )}
+
+              {splitType === 'percentage' &&
+                selectedMembers.includes(member.id) && (
+                  <div className="flex items-center">
                     <Input
                       type="number"
-                      step="0.01"
+                      step="0.1"
                       min="0"
-                      value={customAmounts[member.id] || ''}
+                      max="100"
+                      value={percentages[member.id] || ''}
                       onChange={(e) =>
-                        setCustomAmounts((prev) => ({
+                        setPercentages((prev) => ({
                           ...prev,
                           [member.id]: e.target.value,
                         }))
                       }
-                      placeholder="Amount"
+                      placeholder="Percentage"
                       className="w-24 ml-2"
                     />
-                  )}
-
-                {splitType === 'percentage' &&
-                  selectedMembers.includes(member.id) && (
-                    <div className="flex items-center">
-                      <Input
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="100"
-                        value={percentages[member.id] || ''}
-                        onChange={(e) =>
-                          setPercentages((prev) => ({
-                            ...prev,
-                            [member.id]: e.target.value,
-                          }))
-                        }
-                        placeholder="Percentage"
-                        className="w-24 ml-2"
-                      />
-                      <span className="ml-1">%</span>
-                    </div>
-                  )}
-              </div>
-            ))}
-          </div>
+                    <span className="ml-1">%</span>
+                  </div>
+                )}
+            </div>
+          ))}
         </div>
+      </div>
 
-        {error && <AlertMessage message={error} className="mt-4" />}
+      {error && <AlertMessage message={error} className="mt-4" />}
 
-        <Button
-          type="submit"
-          disabled={
-            !description || !amount || !paidBy || selectedMembers.length === 0
-          }
-        >
-          Add Expense
-        </Button>
-      </form>
-    </Card>
+      <Button
+        type="submit"
+        disabled={
+          !description || !amount || !paidBy || selectedMembers.length === 0
+        }
+      >
+        Add Expense
+      </Button>
+    </form>
   )
 }
