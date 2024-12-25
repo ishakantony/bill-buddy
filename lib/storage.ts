@@ -50,6 +50,7 @@ export const storage = {
     const groups = storage.getGroups()
     groups.push(group)
     storage.setGroups(groups)
+    dispatchStorageEvent(STORAGE_KEYS.GROUPS)
   },
 
   updateGroup: (updatedGroup: Group) => {
@@ -58,6 +59,7 @@ export const storage = {
     if (index !== -1) {
       groups[index] = updatedGroup
       storage.setGroups(groups)
+      dispatchStorageEvent(STORAGE_KEYS.GROUPS)
     }
   },
 
@@ -67,6 +69,7 @@ export const storage = {
     if (group) {
       group.expenses.push(expense)
       storage.setGroups(groups)
+      dispatchStorageEvent(STORAGE_KEYS.GROUPS)
     }
   },
 }

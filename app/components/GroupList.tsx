@@ -20,15 +20,22 @@ export function GroupList() {
     // Load initial groups
     setGroups(storage.getGroups())
 
-    // Setup storage event listener to update groups when changed in another component
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'bill-buddy-groups') {
+    // Setup storage event listener to update groups when changed
+    const handleStorageChange = (e: CustomEvent<{ key: string }>) => {
+      if (e.detail.key === 'bill-buddy-groups') {
         setGroups(storage.getGroups())
       }
     }
 
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    window.addEventListener(
+      'localStorageChange',
+      handleStorageChange as EventListener
+    )
+    return () =>
+      window.removeEventListener(
+        'localStorageChange',
+        handleStorageChange as EventListener
+      )
   }, [])
 
   const handleExpenseAdded = () => {
