@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select'
 import { storage } from '@/lib/storage'
 import { Group, Expense, Split } from '@/types'
+import { AlertMessage } from './AlertMessage'
 
 interface ExpenseFormProps {
   group: Group
@@ -28,9 +29,11 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
   const [selectedMembers, setSelectedMembers] = useState<string[]>([])
   const [customAmounts, setCustomAmounts] = useState<Record<string, string>>({})
   const [percentages, setPercentages] = useState<Record<string, string>>({})
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
 
     if (!description || !amount || !paidBy || selectedMembers.length === 0)
       return
@@ -65,7 +68,7 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
           0
         )
         if (Math.abs(customTotal - totalAmount) > 0.01) {
-          alert('Custom amounts must sum up to the total expense amount')
+          setError('Custom amounts must sum up to the total expense amount')
           return
         }
 
@@ -89,7 +92,7 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
           0
         )
         if (Math.abs(totalPercentage - 100) > 0.01) {
-          alert('Percentages must sum up to 100%')
+          setError('Percentages must sum up to 100%')
           return
         }
 
@@ -119,6 +122,7 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
     setSelectedMembers([])
     setCustomAmounts({})
     setPercentages({})
+    setError(null)
   }
 
   const handleMemberSelect = (userId: string) => {
@@ -252,6 +256,8 @@ export function ExpenseForm({ group, onExpenseAdded }: ExpenseFormProps) {
             ))}
           </div>
         </div>
+
+        {error && <AlertMessage message={error} className="mt-4" />}
 
         <Button
           type="submit"
