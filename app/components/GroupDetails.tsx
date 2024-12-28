@@ -68,9 +68,11 @@ export function GroupDetails({ groupId }: { groupId: string }) {
             <DialogTrigger asChild>
               <Button>Add Expense</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby="add-new-expense-dialog-description">
               <DialogHeader>
-                <DialogTitle>Add New Expense</DialogTitle>
+                <DialogTitle id="add-new-expense-dialog-description">
+                  Add New Expense
+                </DialogTitle>
               </DialogHeader>
               <ExpenseForm
                 group={group}
@@ -82,7 +84,7 @@ export function GroupDetails({ groupId }: { groupId: string }) {
         </div>
 
         <div className="space-y-6">
-          <div>
+          <div data-testid="balances">
             <h4 className="font-medium mb-2">Balances</h4>
             <div className="space-y-2">
               {calculateBalances(group).map((balance) => {
@@ -110,14 +112,18 @@ export function GroupDetails({ groupId }: { groupId: string }) {
             </div>
           </div>
 
-          <div>
+          <div data-testid="expenses">
             <h4 className="font-medium mb-2">Expenses</h4>
             {group.expenses.length === 0 ? (
               <p className="text-center text-gray-500">No expenses added yet</p>
             ) : (
               <div className="space-y-2">
                 {group.expenses.map((expense) => (
-                  <Card key={expense.id} className="p-3">
+                  <Card
+                    key={expense.id}
+                    className="p-3"
+                    data-testid={expense.id}
+                  >
                     <div className="flex justify-between">
                       <span className="font-medium">{expense.description}</span>
                       <span>${expense.amount.toFixed(2)}</span>
@@ -136,6 +142,7 @@ export function GroupDetails({ groupId }: { groupId: string }) {
                           <div
                             key={split.userId}
                             className="flex justify-between"
+                            data-testid={`split-${split.userId}`}
                           >
                             <span>{member?.name}</span>
                             <span>

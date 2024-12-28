@@ -47,9 +47,11 @@ export function UserList() {
             <DialogTrigger asChild>
               <Button>Add User</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby="add-new-user-dialog-description">
               <DialogHeader>
-                <DialogTitle>Add New User</DialogTitle>
+                <DialogTitle id="add-new-user-dialog-description">
+                  Add New User
+                </DialogTitle>
               </DialogHeader>
               <UserForm onSuccess={() => setOpen(false)} />
             </DialogContent>

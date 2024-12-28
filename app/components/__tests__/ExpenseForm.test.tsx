@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { ExpenseForm } from '../ExpenseForm'
 import { storage } from '../../../lib/storage'
-import { Group } from '@/types'
+import { Group } from '../../../types'
 
 // Mock the storage module
 jest.mock('../../../lib/storage', () => ({
@@ -9,6 +9,12 @@ jest.mock('../../../lib/storage', () => ({
     addExpenseToGroup: jest.fn(),
   },
 }))
+
+// Mock crypto.randomUUID
+const mockUUID = '123e4567-e89b-12d3-a456-426614174000'
+Object.defineProperty(global.crypto, 'randomUUID', {
+  value: () => mockUUID,
+})
 
 describe('ExpenseForm', () => {
   const mockGroup: Group = {
@@ -72,7 +78,7 @@ describe('ExpenseForm', () => {
       name: 'Select who paid',
     })
     fireEvent.click(paidByButton)
-    const johnOption = screen.getByText('John')
+    const johnOption = screen.getByRole('option', { name: 'John' })
     fireEvent.click(johnOption)
 
     // Select members to split between
@@ -126,15 +132,15 @@ describe('ExpenseForm', () => {
       name: 'Select who paid',
     })
     fireEvent.click(paidByButton)
-    const johnOption = screen.getByText('John')
+    const johnOption = screen.getByRole('option', { name: 'John' })
     fireEvent.click(johnOption)
 
     // Change to custom split
     const splitTypeButton = screen.getByRole('combobox', {
-      name: 'Equal Split',
+      name: 'Split Type',
     })
     fireEvent.click(splitTypeButton)
-    const customOption = screen.getByText('Custom Amounts')
+    const customOption = screen.getByRole('option', { name: 'Custom Amounts' })
     fireEvent.click(customOption)
 
     // Select members and set custom amounts
@@ -194,15 +200,17 @@ describe('ExpenseForm', () => {
       name: 'Select who paid',
     })
     fireEvent.click(paidByButton)
-    const johnOption = screen.getByText('John')
+    const johnOption = screen.getByRole('option', { name: 'John' })
     fireEvent.click(johnOption)
 
     // Change to percentage split
     const splitTypeButton = screen.getByRole('combobox', {
-      name: 'Equal Split',
+      name: 'Split Type',
     })
     fireEvent.click(splitTypeButton)
-    const percentageOption = screen.getByText('Percentage Split')
+    const percentageOption = screen.getByRole('option', {
+      name: 'Percentage Split',
+    })
     fireEvent.click(percentageOption)
 
     // Select members and set percentages
@@ -264,15 +272,15 @@ describe('ExpenseForm', () => {
       name: 'Select who paid',
     })
     fireEvent.click(paidByButton)
-    const johnOption = screen.getByText('John')
+    const johnOption = screen.getByRole('option', { name: 'John' })
     fireEvent.click(johnOption)
 
     // Change to custom split
     const splitTypeButton = screen.getByRole('combobox', {
-      name: 'Equal Split',
+      name: 'Split Type',
     })
     fireEvent.click(splitTypeButton)
-    const customOption = screen.getByText('Custom Amounts')
+    const customOption = screen.getByRole('option', { name: 'Custom Amounts' })
     fireEvent.click(customOption)
 
     // Select members and set invalid custom amounts (sum to 90 instead of 100)
@@ -323,15 +331,17 @@ describe('ExpenseForm', () => {
       name: 'Select who paid',
     })
     fireEvent.click(paidByButton)
-    const johnOption = screen.getByText('John')
+    const johnOption = screen.getByRole('option', { name: 'John' })
     fireEvent.click(johnOption)
 
     // Change to percentage split
     const splitTypeButton = screen.getByRole('combobox', {
-      name: 'Equal Split',
+      name: 'Split Type',
     })
     fireEvent.click(splitTypeButton)
-    const percentageOption = screen.getByText('Percentage Split')
+    const percentageOption = screen.getByRole('option', {
+      name: 'Percentage Split',
+    })
     fireEvent.click(percentageOption)
 
     // Select members and set invalid percentages (sum to 90% instead of 100%)

@@ -1,5 +1,10 @@
 import { GroupDetails } from '@/app/components/GroupDetails'
 
-export default function GroupPage({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default function GroupPage({ params }: Props) {
   return <GroupDetails groupId={params.id} />
 }

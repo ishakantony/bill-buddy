@@ -171,7 +171,7 @@ export function ExpenseForm({
       <div className="space-y-2">
         <Label htmlFor="paidBy">Paid By</Label>
         <Select value={paidBy} onValueChange={setPaidBy}>
-          <SelectTrigger>
+          <SelectTrigger aria-label="Select who paid">
             <SelectValue placeholder="Select who paid" />
           </SelectTrigger>
           <SelectContent>
@@ -192,7 +192,7 @@ export function ExpenseForm({
             setSplitType(value)
           }
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label="Split Type">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -234,6 +234,7 @@ export function ExpenseForm({
                     }
                     placeholder="Amount"
                     className="w-24 ml-2"
+                    aria-label={`Amount for ${member.name}`}
                   />
                 )}
 
@@ -254,6 +255,7 @@ export function ExpenseForm({
                       }
                       placeholder="Percentage"
                       className="w-24 ml-2"
+                      aria-label={`Percentage for ${member.name}`}
                     />
                     <span className="ml-1">%</span>
                   </div>

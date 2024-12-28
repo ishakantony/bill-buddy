@@ -3,10 +3,16 @@ import { GroupList } from '../GroupList'
 import { storage } from '../../../lib/storage'
 import { Group } from '@/types'
 
+interface LinkProps {
+  href: string
+  [key: string]: string | number | boolean | undefined // Allow additional props like `aria-label`
+}
+
 // Mock the storage module
 jest.mock('../../../lib/storage', () => ({
   storage: {
     getGroups: jest.fn(),
+    getUsers: jest.fn(),
   },
 }))
 
@@ -15,10 +21,16 @@ jest.mock('next/link', () => {
   const MockedLink = ({
     children,
     href,
+    ...props
   }: {
     children: React.ReactNode
     href: string
-  }) => <a href={href}>{children}</a>
+    props: LinkProps
+  }) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  )
   MockedLink.displayName = 'Link'
   return MockedLink
 })
@@ -40,6 +52,7 @@ describe('GroupList', () => {
       members: [
         { id: '1', name: 'John', email: 'john@example.com' },
         { id: '3', name: 'Bob', email: 'bob@example.com' },
+        { id: '3', name: 'Isaac', email: 'isaac@example.com' },
       ],
       expenses: [],
     },
@@ -96,6 +109,7 @@ describe('GroupList', () => {
 
   it('opens group dialog when add group button is clicked', () => {
     ;(storage.getGroups as jest.Mock).mockReturnValue([])
+    ;(storage.getUsers as jest.Mock).mockReturnValue([])
 
     render(<GroupList />)
 
@@ -156,7 +170,9 @@ describe('GroupList', () => {
     render(<GroupList />)
 
     mockGroups.forEach((group) => {
-      const link = screen.getByRole('link', { name: /view details/i })
+      const link = screen.getByRole('link', {
+        name: `View details for group ${group.name}`,
+      })
       expect(link).toHaveAttribute('href', `/groups/${group.id}`)
     })
   })

@@ -101,7 +101,10 @@ export function GroupList() {
                   </p>
                 </div>
                 <div className="flex flex-col space-y-2">
-                  <Link href={`/groups/${group.id}`}>
+                  <Link
+                    href={`/groups/${group.id}`}
+                    aria-label={`View details for group ${group.name}`}
+                  >
                     <Button variant="outline" size="sm" className="w-full">
                       View Details
                     </Button>

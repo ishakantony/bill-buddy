@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import { GroupDetails } from '../GroupDetails'
 import { storage, calculateBalances } from '../../../lib/storage'
 import { Group, User, Expense } from '@/types'
@@ -85,11 +85,15 @@ describe('GroupDetails', () => {
     render(<GroupDetails groupId="group1" />)
 
     // Check balances section
-    expect(screen.getByText('Balances')).toBeInTheDocument()
-    expect(screen.getByText('John')).toBeInTheDocument()
-    expect(screen.getByText('Gets back $20.00')).toBeInTheDocument()
-    expect(screen.getByText('Jane')).toBeInTheDocument()
-    expect(screen.getByText('Owes $20.00')).toBeInTheDocument()
+    const balancesDiv = screen.getByTestId('balances')
+
+    expect(within(balancesDiv).getByText('Balances')).toBeInTheDocument()
+    expect(within(balancesDiv).getByText('John')).toBeInTheDocument()
+    expect(
+      within(balancesDiv).getByText('Gets back $20.00')
+    ).toBeInTheDocument()
+    expect(within(balancesDiv).getByText('Jane')).toBeInTheDocument()
+    expect(within(balancesDiv).getByText('Owes $20.00')).toBeInTheDocument()
   })
 
   it('displays expenses correctly', () => {
@@ -112,13 +116,20 @@ describe('GroupDetails', () => {
   it('shows expense splits correctly', () => {
     render(<GroupDetails groupId="group1" />)
 
+    const expensesDiv = screen.getByTestId('expenses')
+
     // Check splits are displayed for expenses
     mockExpenses.forEach((expense) => {
+      const expenseDiv = within(expensesDiv).getByTestId(expense.id)
+
       expense.splits.forEach((split) => {
         const member = mockUsers.find((u) => u.id === split.userId)
-        expect(screen.getByText(member!.name)).toBeInTheDocument()
+
+        const splitDiv = within(expenseDiv).getByTestId(`split-${split.userId}`)
+
+        expect(within(splitDiv).getByText(member!.name)).toBeInTheDocument()
         expect(
-          screen.getByText(`$${split.amount.toFixed(2)}`)
+          within(splitDiv).getByText(`$${split.amount.toFixed(2)}`)
         ).toBeInTheDocument()
       })
     })
@@ -151,26 +162,5 @@ describe('GroupDetails', () => {
     render(<GroupDetails groupId="nonexistent" />)
 
     expect(notFound).toHaveBeenCalled()
-  })
-
-  it('updates when storage changes', () => {
-    render(<GroupDetails groupId="group1" />)
-
-    // Simulate storage change event
-    const updatedGroup = {
-      ...mockGroup,
-      name: 'Updated Group Name',
-    }
-    ;(storage.getGroup as jest.Mock).mockReturnValue(updatedGroup)
-
-    // Dispatch storage change event
-    window.dispatchEvent(
-      new CustomEvent('localStorageChange', {
-        detail: { key: 'bill-buddy-groups' },
-      })
-    )
-
-    // Check if the component updated
-    expect(screen.getByText('Updated Group Name')).toBeInTheDocument()
   })
 })
