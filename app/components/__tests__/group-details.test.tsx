@@ -16,6 +16,14 @@ jest.mock('../../../lib/storage', () => ({
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   notFound: jest.fn(),
+  useRouter: () => ({
+    push: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+    replace: jest.fn(),
+  }),
 }))
 
 describe('GroupDetails', () => {
@@ -162,5 +170,26 @@ describe('GroupDetails', () => {
     render(<GroupDetails groupId="nonexistent" />)
 
     expect(notFound).toHaveBeenCalled()
+  })
+
+  it('renders back button and navigates to groups page when clicked', () => {
+    // Create mock router instance
+    const mockPush = jest.fn()
+    jest.spyOn(require('next/navigation'), 'useRouter').mockReturnValue({
+      push: mockPush,
+      back: jest.fn(),
+      forward: jest.fn(),
+      refresh: jest.fn(),
+      prefetch: jest.fn(),
+      replace: jest.fn(),
+    })
+    
+    render(<GroupDetails groupId="group1" />)
+    
+    const backButton = screen.getByLabelText('Back to group list')
+    expect(backButton).toBeInTheDocument()
+    
+    fireEvent.click(backButton)
+    expect(mockPush).toHaveBeenCalledWith('/groups')
   })
 })

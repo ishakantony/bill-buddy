@@ -13,7 +13,8 @@ import {
 import { ExpenseForm } from './expense-form'
 import { Group } from '@/types'
 import { useEffect, useState } from 'react'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 
 export function GroupDetails({ groupId }: { groupId: string }) {
   const [group, setGroup] = useState<Group | null>(null)
@@ -59,10 +60,20 @@ export function GroupDetails({ groupId }: { groupId: string }) {
     }
   }
 
+  const router = useRouter()
+
   return (
     <div className="container mx-auto py-6">
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/groups')}
+            aria-label="Back to group list"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <h1 className="text-2xl font-bold">{group.name}</h1>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
