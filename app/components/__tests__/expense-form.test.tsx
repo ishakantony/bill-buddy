@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ExpenseForm } from '../ExpenseForm'
+import { ExpenseForm } from '../expense-form'
 import { storage } from '../../../lib/storage'
 import { Group } from '../../../types'
 

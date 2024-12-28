@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { GroupList } from '../GroupList'
+import { GroupList } from '../group-list'
 import { storage } from '../../../lib/storage'
 import { Group } from '@/types'
 

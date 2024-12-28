@@ -1,4 +1,4 @@
-import { GroupDetails } from '@/app/components/GroupDetails'
+import { GroupDetails } from '@/app/components/group-details'
 
 type Props = {
   params: { id: string }

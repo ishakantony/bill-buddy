@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { GroupForm } from '../GroupForm'
+import { GroupForm } from '../group-form'
 import { storage } from '../../../lib/storage'
 
 // Mock the storage module

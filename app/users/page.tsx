@@ -1,6 +1,6 @@
 'use client'
 
-import { UserList } from '../components/UserList'
+import { UserList } from '../components/user-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter } from 'next/navigation'
 

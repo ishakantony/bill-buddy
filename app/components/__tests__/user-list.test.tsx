@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { UserList } from '../UserList'
+import { UserList } from '../user-list'
 import { storage } from '../../../lib/storage'
 import { User } from '@/types'
 

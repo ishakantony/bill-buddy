@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, within } from '@testing-library/react'
-import { GroupDetails } from '../GroupDetails'
+import { GroupDetails } from '../group-details'
 import { storage, calculateBalances } from '../../../lib/storage'
 import { Group, User, Expense } from '@/types'
 import { notFound } from 'next/navigation'

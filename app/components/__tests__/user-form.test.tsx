@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { UserForm } from '../UserForm'
+import { UserForm } from '../user-form'
 import { storage } from '../../../lib/storage'
 
 // Mock the storage module

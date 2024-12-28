@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { UserForm } from './UserForm'
+import { UserForm } from './user-form'
 
 export function UserList() {
   const [users, setUsers] = useState<User[]>([])

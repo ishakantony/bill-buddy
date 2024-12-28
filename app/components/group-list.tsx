@@ -13,8 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { GroupForm } from './GroupForm'
-import { ExpenseForm } from './ExpenseForm'
+import { GroupForm } from './group-form'
+import { ExpenseForm } from './expense-form'
 
 export function GroupList() {
   const [groups, setGroups] = useState<Group[]>([])

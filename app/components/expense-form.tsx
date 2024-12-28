@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select'
 import { storage } from '@/lib/storage'
 import { Group, Expense, Split } from '@/types'
-import { AlertMessage } from './AlertMessage'
+import { AlertMessage } from './alert-message'
 
 interface ExpenseFormProps {
   group: Group

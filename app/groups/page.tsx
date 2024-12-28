@@ -1,6 +1,6 @@
 'use client'
 
-import { GroupList } from '../components/GroupList'
+import { GroupList } from '../components/group-list'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter } from 'next/navigation'
 

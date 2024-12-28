@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { ExpenseForm } from './ExpenseForm'
+import { ExpenseForm } from './expense-form'
 import { Group } from '@/types'
 import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
