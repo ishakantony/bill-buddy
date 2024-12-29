@@ -136,7 +136,12 @@ export function GroupDetails({ groupId }: { groupId: string }) {
                     data-testid={expense.id}
                   >
                     <div className="flex justify-between">
-                      <span className="font-medium">{expense.description}</span>
+                      <div>
+                        <span className="font-medium">{expense.description}</span>
+                        <div className="text-sm text-gray-500">
+                          {new Date(expense.date).toLocaleDateString()}
+                        </div>
+                      </div>
                       <span>${expense.amount.toFixed(2)}</span>
                     </div>
                     <div className="text-sm text-gray-500">
