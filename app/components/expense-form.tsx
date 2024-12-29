@@ -11,6 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { format } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
 import { storage } from '@/lib/storage'
 import { Group, Expense, Split } from '@/types'
 import { AlertMessage } from './alert-message'
@@ -35,7 +39,9 @@ export function ExpenseForm({
   const [selectedMembers, setSelectedMembers] = useState<string[]>([])
   const [customAmounts, setCustomAmounts] = useState<Record<string, string>>({})
   const [percentages, setPercentages] = useState<Record<string, string>>({})
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [error, setError] = useState<string | null>(null)
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,7 +119,7 @@ export function ExpenseForm({
       description,
       amount: totalAmount,
       paidBy,
-      date: new Date().toISOString(),
+      date: date?.toISOString() || new Date().toISOString(),
       splits,
     }
 
@@ -128,6 +134,7 @@ export function ExpenseForm({
     setSelectedMembers([])
     setCustomAmounts({})
     setPercentages({})
+    setDate(new Date())
     setError(null)
     onSuccess?.()
   }
@@ -143,6 +150,32 @@ export function ExpenseForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label>Date</Label>
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, 'PPP') : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(date) => {
+                setDate(date)
+                setIsPopoverOpen(false)
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
         <Input
