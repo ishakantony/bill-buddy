@@ -4,14 +4,23 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { storage } from '@/lib/storage'
 
 export default function SignupPage() {
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Hardcoded signup
-    router.push('/users')
+    const formData = new FormData(e.target as HTMLFormElement)
+    const user = {
+      id: crypto.randomUUID(),
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string
+    }
+    
+    storage.addUser(user)
+    router.push('/login')
   }
 
   return (
@@ -21,15 +30,15 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" required />
+            <Input id="name" name="name" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" required />
+            <Input id="email" name="email" type="email" required />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Input id="password" name="password" type="password" required />
           </div>
           <Button type="submit" className="w-full">
             Sign Up

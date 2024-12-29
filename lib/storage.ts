@@ -3,6 +3,7 @@ import { User, Group, Expense } from '@/types'
 const STORAGE_KEYS = {
   USERS: 'bill-buddy-users',
   GROUPS: 'bill-buddy-groups',
+  TOKEN: 'bill-buddy-token',
 } as const
 
 // Custom event for storage changes
@@ -77,6 +78,23 @@ export const storage = {
       storage.setGroups(groups)
       dispatchStorageEvent(STORAGE_KEYS.GROUPS)
     }
+  },
+
+  getToken: (): string | null => {
+    if (typeof window === 'undefined') return null
+    return localStorage.getItem(STORAGE_KEYS.TOKEN)
+  },
+
+  setToken: (token: string) => {
+    if (typeof window === 'undefined') return
+    localStorage.setItem(STORAGE_KEYS.TOKEN, token)
+    dispatchStorageEvent(STORAGE_KEYS.TOKEN)
+  },
+
+  clearToken: () => {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(STORAGE_KEYS.TOKEN)
+    dispatchStorageEvent(STORAGE_KEYS.TOKEN)
   },
 }
 
