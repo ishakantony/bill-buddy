@@ -15,7 +15,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex items-center justify-center" style={{ height: 'calc(100vh - 4rem)' }}>
+    <div className="flex items-center justify-center grow">
       <div className="w-full max-w-sm space-y-4">
         <h1 className="text-2xl font-bold">Sign Up</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
